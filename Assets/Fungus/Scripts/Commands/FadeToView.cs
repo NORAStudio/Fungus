@@ -77,12 +77,12 @@ namespace Fungus
             if (targetCamera == null ||
                 targetView == null)
             {
+                print("Null view or camera");
                 Continue();
                 return;
             }
 
             var cameraManager = FungusManager.Instance.CameraManager;
-
             if (fadeTexture)
             {
                 cameraManager.ScreenFadeTexture = fadeTexture;
@@ -92,7 +92,7 @@ namespace Fungus
                 cameraManager.ScreenFadeTexture = CameraManager.CreateColorTexture(fadeColor, 32, 32);
             }
 
-            cameraManager.FadeToView(targetCamera, targetView, duration, fadeOut, delegate { 
+            cameraManager.FadeToView(targetCamera, targetView, duration, fadeOut, delegate {
                 if (waitUntilFinished)
                 {
                     Continue();

@@ -1,8 +1,9 @@
 // This code is part of the Fungus library (https://github.com/snozbot/fungus)
 // It is released for free under the MIT open source license (https://github.com/snozbot/fungus/blob/master/LICENSE)
 
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,8 +41,7 @@ namespace Fungus
         [Tooltip("Gameobject to punch when the punch tags are displayed. If none is set, the main camera will shake instead.")]
         [SerializeField] protected GameObject punchObject;
 
-        [Tooltip("Writing characters per second")]
-        [SerializeField] protected float writingSpeed = 60;
+        protected float writingSpeed { get => SettingsData.Instance.WritingSpeed; }
 
         [Tooltip("Pause duration for punctuation characters")]
         [SerializeField] protected float punctuationPause = 0.25f;
@@ -69,7 +69,8 @@ namespace Fungus
         protected float currentWritingSpeed;
         protected float currentPunctuationPause;
         protected TextAdapter textAdapter = new TextAdapter();
-
+        
+        protected static bool isClickable = true;
         protected bool boldActive = false;
         protected bool italicActive = false;
         protected bool colorActive = false;
@@ -779,6 +780,16 @@ namespace Fungus
             inputFlag = false;
             isWaitingForInput = true;
 
+            if (SettingsData.Instance.skip)
+            {
+                inputFlag = true;
+            }
+            if (SettingsData.Instance.autoForward)
+            {
+                yield return new WaitForSeconds(SettingsData.Instance.autoForwardDelay);
+                inputFlag = true;
+            }
+
             while (!inputFlag && !exitFlag)
             {
                 yield return null;
@@ -935,6 +946,12 @@ namespace Fungus
         /// </summary>
         public virtual bool Paused { set; get; }
 
+        public static bool IsClickable
+        {
+            get => isClickable;
+            set => isClickable = value;
+        }
+
         /// <summary>
         /// Stop writing text.
         /// </summary>
@@ -945,7 +962,7 @@ namespace Fungus
                 exitFlag = true;
             }
         }
-
+        
         /// <summary>
         /// Writes text using a typewriter effect to a UI text object.
         /// </summary>
@@ -1001,17 +1018,28 @@ namespace Fungus
         {
             textAdapter.SetTextAlpha(textAlpha);
         }
-
-
-
+        
         #endregion
 
         #region IDialogInputListener implementation
 
         public virtual void OnNextLineEvent()
         {
+            if (!IsClickable)
+            {
+                return;
+            }
             
+            if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
+            {
+                GameObject current = EventSystem.current.currentSelectedGameObject;
 
+                if (current != null && current.GetComponentInParent<SayDialog>() == null)
+                {
+                    return;
+                }
+            }
+            
             if (isWriting || isWaitingForInput)
             {
                 inputFlag = true;

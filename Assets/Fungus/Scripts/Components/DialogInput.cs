@@ -99,8 +99,8 @@ namespace Fungus
             
             if (writer != null && writer.IsWriting)
             {
-                if (inputSystemUIInputModule.submit.action.triggered ||
-                    (cancelEnabled && inputSystemUIInputModule.cancel.action.triggered))
+                //убрал (cancelEnabled && inputSystemUIInputModule.cancel.action.triggered) чтоб починить скип по esc
+                if (inputSystemUIInputModule.submit.action.triggered)
                 {
                     SetNextLineFlag();
                 }
@@ -113,8 +113,8 @@ namespace Fungus
 
             if (writer != null)
             {
-                if (Input.GetButtonDown(currentStandaloneInputModule.submitButton) ||
-                    (cancelEnabled && Input.GetButton(currentStandaloneInputModule.cancelButton)))
+                //убрал (cancelEnabled && Input.GetButton(currentStandaloneInputModule.cancelButton)) чтоб починить скип по esc
+                if (Input.GetButtonDown(currentStandaloneInputModule.submitButton))
                 {
                     SetNextLineFlag();
                 }

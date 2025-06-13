@@ -192,6 +192,7 @@ namespace Fungus
 
         protected virtual void Stop()
         {
+            print("stop");
             if (lastUsedAudioSource == null)
             {
                 return;
@@ -200,6 +201,7 @@ namespace Fungus
             // There's an audible click if you call audioSource.Stop() so instead we just switch off
             // looping and let the audio stop automatically at the end of the clip
             targetVolume = 0f;
+            lastUsedAudioSource.volume = 0f;
             lastUsedAudioSource.loop = false;
             playBeeps = false;
             playingVoiceover = false;

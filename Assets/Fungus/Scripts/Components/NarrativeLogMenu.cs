@@ -36,6 +36,14 @@ namespace Fungus
         [SerializeField] protected CanvasGroup narrativeLogMenuGroup;
 
         protected static bool narrativeLogActive = false;
+        public static bool NarrativeLogActive {
+            get => !narrativeLogActive;
+            set
+            {
+                narrativeLogActive = !value;
+                instance.ToggleNarrativeLogView();
+            }
+        }
         
         protected AudioSource clickAudioSource;
 
@@ -48,15 +56,15 @@ namespace Fungus
             if (showLog)
             {
                 // Only one instance of NarrativeLogMenu may exist
-                if (instance != null)
-                {
-                    Destroy(gameObject);
-                    return;
-                }
+                //if (instance != null)
+                //{
+                //    Destroy(gameObject);
+                //    return;
+                //}
 
                 instance = this;
 
-                GameObject.DontDestroyOnLoad(this);
+                //GameObject.DontDestroyOnLoad(this);
 
                 clickAudioSource = GetComponent<AudioSource>();
             }
@@ -158,7 +166,7 @@ namespace Fungus
             }
         }
 
-        #region Public methods
+#region Public methods
 
         public virtual void ToggleNarrativeLogView()
         {
@@ -193,10 +201,10 @@ namespace Fungus
                 
             }
 
-            narrativeLogActive = !narrativeLogActive;
+            narrativeLogMenuGroup.blocksRaycasts = !narrativeLogActive;
         }
     
-        #endregion
+#endregion
     }
 }
 
