@@ -1,3 +1,15 @@
+Fungus CE NORA Fork
+=====================
+This repository is fork of Fungus CE with changes being made by NORA Studio for their own projects.
+
+
+Original 2 README:
+================
+___
+___
+___
+
+
 Fungus Community Edition
 ========================
 A community revival of the Fungus project. Our goal is to maintain support for newer versions of Unity, and hopefully get Fungus back on the Asset Store.
