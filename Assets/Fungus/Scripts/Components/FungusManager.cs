@@ -40,6 +40,7 @@ namespace Fungus
 #endif
             MainAudioMixer.Init();
             MusicManager.Init();
+            DontDestroyOnLoad(this);
         }
 
         /// <summary>
