@@ -61,7 +61,7 @@ namespace Fungus
         /// Plays game music using an audio clip.
         /// One music clip may be played at a time.
         /// </summary>
-        public void PlayMusic(AudioClip musicClip, bool loop, float fadeDuration, float atTime)
+        public virtual void PlayMusic(AudioClip musicClip, bool loop, float fadeDuration, float atTime)
         {
             if (audioSourceMusic == null || audioSourceMusic.clip == musicClip)
             {
