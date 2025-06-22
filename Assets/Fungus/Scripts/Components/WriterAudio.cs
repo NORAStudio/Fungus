@@ -104,16 +104,23 @@ namespace Fungus
 
         public float GetSecondsRemaining()
         {
+            const float defaultWaitTime = .1f;
+
             if (playingVoiceover)
             {
-                return targetAudioSource.isPlaying ? targetAudioSource.clip.length - targetAudioSource.time : 0f;
-            }
-            else
-            {
-                return 0F;
-            }
-        }
+                if (targetAudioSource == null || targetAudioSource.clip == null)
+                {
+                    Debug.LogWarning("WriterAudio: targetAudioSource or audio clip is not assigned. Using default wait time.");
+                    return defaultWaitTime;
+                }
 
+                return targetAudioSource.isPlaying
+                    ? targetAudioSource.clip.length - targetAudioSource.time
+                    : 0f;
+            }
+
+            return 0f;
+        }
         protected virtual void SetAudioMode(AudioMode mode)
         {
             audioMode = mode;
