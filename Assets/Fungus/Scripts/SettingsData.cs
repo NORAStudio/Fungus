@@ -4,7 +4,7 @@ using UnityEngine;
 public class SettingsData
 {
     #region Service
-    private readonly static string filepath = Application.persistentDataPath + "//settings.json";
+    private static readonly string filepath = Path.Combine(Application.persistentDataPath, "settings.json");
 
     private static SettingsData _instance;
     public static SettingsData Instance
@@ -17,42 +17,63 @@ public class SettingsData
         }
         private set { _instance = value; }
     }
+
     static void Load()
     {
-        if (!File.Exists(filepath))
+        try
         {
-            _instance = new SettingsData();
-            _instance.resolution = new Resolution {width = _instance.width, height = _instance.height};
-            Save();
-            return;
+            if (File.Exists(filepath))
+            {
+                _instance = JsonUtility.FromJson<SettingsData>(File.ReadAllText(filepath));
+            }
+            else
+            {
+                _instance = new SettingsData();
+            }
         }
-        _instance = JsonUtility.FromJson<SettingsData>(File.ReadAllText(filepath));
-        _instance.resolution = new Resolution {width = _instance.width, height = _instance.height};
+        catch
+        {
+            Debug.LogWarning("Failed to load settings, resetting to defaults.");
+            _instance = new SettingsData();
+        }
     }
+
     public static void Save()
     {
-        _instance.width = _instance.resolution.width;
-        _instance.height = _instance.resolution.height;
         File.WriteAllText(filepath, JsonUtility.ToJson(_instance));
     }
     #endregion
 
-    public float masterVolume = 0.5f, voiceVolume = 0.5f;
-    public float autoForwardDelay = 1f, writingSpeed = 60f;
-    public Resolution resolution;
+    public float musicVolume = 1f;
+    public float soundVolume = 1f;
+    public float autoForwardDelay = 1f;
+    public float writingSpeed = 60f;
+
     [SerializeField] private int width = 1366;
     [SerializeField] private int height = 768;
-    public FullScreenMode fullScreenMode = FullScreenMode.ExclusiveFullScreen;
-
-    public bool autoForward = false, skip = false;
-
-    public float WritingSpeed
+    private Resolution _resolution;
+    public Resolution resolution
     {
         get
         {
-            if (skip)
-                return 1000f;
-            return writingSpeed;
+            if (_resolution.width == 0 || _resolution.height == 0)
+            {
+                _resolution.width = width;
+                _resolution.height = height;
+            }
+            return _resolution;
+        }
+        set
+        {
+            _resolution = value;
+            width = value.width;
+            height = value.height;
         }
     }
+
+    public FullScreenMode fullScreenMode = FullScreenMode.ExclusiveFullScreen;
+    public bool autoForward = false;
+    public bool skip = false;
+
+    public float WritingSpeed => skip ? 1000f : writingSpeed;
 }
