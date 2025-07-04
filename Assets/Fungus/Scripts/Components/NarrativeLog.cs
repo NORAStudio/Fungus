@@ -138,7 +138,7 @@ namespace Fungus
             for (int i = 0; i < count; i++)
             {
                 output += "<b>" + history.entries[i].name + "</b>\n";
-                output += history.entries[i].text + "\n\n";
+                output += history.entries[i].text.Replace("\r", "") + "\n\n";
             }
             return output;
         }
