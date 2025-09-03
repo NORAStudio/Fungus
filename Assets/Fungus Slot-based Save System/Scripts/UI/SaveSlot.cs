@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.UI;
@@ -19,6 +19,7 @@ namespace CGTUnity.Fungus.SaveSystem
         [SerializeField] protected bool refreshContinuously = true;
         [SerializeField] protected RawImage Screenshot;
         [SerializeField] protected int saveSlotNumber;
+        [SerializeField] protected Image selectedHighlight;
 
         protected GameSaveData saveData = null;
         protected Texture2D cachedTexture;
@@ -120,6 +121,12 @@ namespace CGTUnity.Fungus.SaveSystem
                 Debug.LogWarning("Failed to load screenshot from " + ScreenPath);
             }
         }
+        
+        public virtual void SetSelected(bool isSelected)
+        {
+            if (selectedHighlight != null)
+                selectedHighlight.enabled = isSelected;
+        }
 
         #endregion
 
@@ -138,6 +145,7 @@ namespace CGTUnity.Fungus.SaveSystem
         protected virtual void OnClick()
         {
             Signals.SaveSlotClicked.Invoke(this);
+            SaveSlotHighlighter.Instance.SetSelectedSlot(this);
         }
 
         protected virtual void OnDestroy()
