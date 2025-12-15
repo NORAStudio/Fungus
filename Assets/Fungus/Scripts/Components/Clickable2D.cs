@@ -42,6 +42,8 @@ namespace Fungus
             var eventDispatcher = FungusManager.Instance.EventDispatcher;
 
             eventDispatcher.Raise(new ObjectClicked.ObjectClickedEvent(this));
+
+            SetMouseCursor.ResetMouseCursor();
         }
 
         protected virtual void DoPointerEnter()
